@@ -31,6 +31,39 @@
     orcid: "ORCID", semanticScholar: "Semantic Scholar", dblp: "DBLP", openreview: "OpenReview",
   };
 
+  /* ---------- email (anti-scraping) ----------
+   * The address never appears as text in the HTML/DOM: it is drawn onto a canvas
+   * and shown as an <img>, and only assembled into a mailto: link on click. */
+  function emailAddr() {
+    var e = P.email;
+    if (!e) return "";
+    return typeof e === "string" ? e : e.user + String.fromCharCode(64) + e.domain;
+  }
+  function emailLink(cls) {
+    return '<a href="#" class="email-link ' + (cls || "") + '" data-mail aria-label="Send an email to ' + esc(P.name) + '">' +
+      '<img class="email-img" alt="Email address (shown as an image)"></a>';
+  }
+  function drawEmails() {
+    var addr = emailAddr();
+    if (!addr) return;
+    var dpr = Math.max(2, window.devicePixelRatio || 1);
+    document.querySelectorAll("[data-mail]").forEach(function (a) {
+      var cs = getComputedStyle(a);
+      var font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+      var size = parseFloat(cs.fontSize);
+      var c = document.createElement("canvas"), ctx = c.getContext("2d");
+      ctx.font = font;
+      var w = Math.ceil(ctx.measureText(addr).width) + 2, h = Math.ceil(size * 1.4);
+      c.width = w * dpr; c.height = h * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.font = font; ctx.fillStyle = cs.color; ctx.textBaseline = "middle";
+      ctx.fillText(addr, 1, h / 2);
+      var img = a.querySelector("img");
+      img.src = c.toDataURL("image/png");
+      img.style.width = w + "px"; img.style.height = h + "px";
+    });
+  }
+
   /* ---------- sidebar ---------- */
   function initials(name) { return (name || "").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2); }
 
@@ -38,7 +71,7 @@
     var el = document.getElementById("sidebar");
     var links = P.links || {};
     var items = [];
-    if (P.email) items.push('<li><a href="mailto:' + esc(P.email) + '">' + icon("email") + esc(P.email) + "</a></li>");
+    if (P.email) items.push("<li>" + emailLink().replace('<img', icon("email") + '<img') + "</li>");
     Object.keys(links).forEach(function (k) {
       if (links[k]) items.push('<li><a href="' + esc(links[k]) + '"' + ext(links[k]) + ">" + icon(k) + esc(LINK_LABELS[k] || k) + "</a></li>");
     });
@@ -309,7 +342,7 @@
     var c = S.contact || {};
     if (!c.text && !P.email) return "";
     return '<div class="contact-box">' + (c.text ? "<p>" + esc(c.text) + "</p>" : "") +
-      (P.email ? '<a class="email" href="mailto:' + esc(P.email) + '">' + esc(P.email) + "</a>" : "") +
+      (P.email ? emailLink("email") : "") +
       (c.address ? "<address>" + esc(c.address) + "</address>" : "") + "</div>";
   }
 
@@ -368,6 +401,11 @@
     var t = e.target.closest("button, a");
     if (!t) return;
 
+    if (t.hasAttribute("data-mail")) {
+      e.preventDefault();
+      location.href = "mailto:" + emailAddr();
+      return;
+    }
     if (t.dataset.view) {
       state.view = t.dataset.view;
       setPressed("[data-view]", "data-view", state.view);
@@ -418,6 +456,7 @@
     var next = cur === "dark" ? "light" : "dark";
     root.dataset.theme = next;
     try { localStorage.setItem("theme", next); } catch (err) {}
+    drawEmails();
   });
 
   // Mobile menu
@@ -447,6 +486,14 @@
   }
 
   // Honor deep links like #pub-foam-agent
+  // Draw email images once web fonts are ready (so the image matches the text), and on theme changes.
+  drawEmails();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawEmails);
+  if (window.matchMedia) {
+    var mq = matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", drawEmails);
+  }
+
   // Sections are rendered by JS, so the browser can't jump to #hash on its own.
   if (/^#pub-/.test(location.hash)) goToPub(location.hash.slice(5));
   else if (location.hash.length > 1) {

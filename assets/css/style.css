@@ -409,3 +409,8 @@ p { margin: 0 0 1em; }
   .metrics { margin-top: 10px; padding-top: 10px; }
   .metric b { font-size: 1.25rem; }
 }
+
+/* Email drawn as an image (see drawEmails in main.js) */
+.email-link { display: inline-flex; align-items: center; gap: 10px; }
+.email-img { display: inline-block; vertical-align: middle; }
+.contact-box .email-link { color: var(--accent); }

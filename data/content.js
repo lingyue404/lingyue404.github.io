@@ -16,14 +16,16 @@ window.SITE = {
     nameNative: "", // optional, e.g. Chinese name shown next to the English name
     highlightName: "Ling Yue",
     pronouns: "",
-    title: "Ph.D. Candidate in Computer Science",
+    title: "Ph.D. Student in Computer Science",
     affiliation: "Rensselaer Polytechnic Institute",
     affiliationUrl: "https://www.rpi.edu/",
     tagline: "Self-improving AI agents for scientific discovery",
     // Square photo. Set to "" to show initials instead.
     photo: "assets/img/profile.jpg",
     location: "Troy, NY",
-    email: "yuel2@rpi.edu",
+    // Split on purpose so scrapers can't regex it out of the source.
+    // The page draws it as an image; clicking opens the mail client.
+    email: { user: "yuel2", domain: "rpi.edu" },
     cv: "", // e.g. "files/CV.pdf" — shows a "Download CV" button when set
     scholarUser: "EhgyJeYAAAAJ", // your Google Scholar user id
     links: {
@@ -62,7 +64,7 @@ window.SITE = {
   /* ---------------------------------------------------------------- */
   // Paragraphs support inline HTML (links, <strong>, <em>).
   about: [
-    "I am a Ph.D. candidate in Computer Science at <a href=\"https://www.rpi.edu/\">Rensselaer Polytechnic Institute</a>, advised by Prof. Shaowu Pan and Prof. Mark Shephard. I build <strong>AI agents for scientific problem solving</strong>, with a focus on agents that <strong>improve themselves through execution feedback</strong>.",
+    "I am a Ph.D. student in Computer Science at <a href=\"https://www.rpi.edu/\">Rensselaer Polytechnic Institute</a>, advised by Prof. Shaowu Pan and Prof. Mark Shephard. I build <strong>AI agents for scientific problem solving</strong>, with a focus on agents that <strong>improve themselves through execution feedback</strong>.",
     "My work automates scientific workflows end to end — from CFD simulation (<em>Foam-Agent</em>) to clinical trial outcome prediction (<em>ClinicalAgent</em>) — co-evolves agent workflows with executable skills (<em>FlowEvo</em>), and verifies claims in research papers by running their code (<em>FactReview</em>). I have published in machine learning venues (KDD, COLM, EMNLP, DMLR) and scientific journals (<em>Nature Computational Science</em>, <em>CMAME</em>).",
     "My goal is to connect these lines of work, so that what an agent learns from one task makes it better at the next. Before my Ph.D., I was a research scientist at Tsinghua University working on graph learning for knowledge graphs and drug discovery, and earlier contributed to the open-source AutoML toolkit NNI at Microsoft Research Asia.",
   ],
