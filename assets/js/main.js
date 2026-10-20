@@ -172,8 +172,6 @@
 
   /* ---------- publications ---------- */
   var TYPE_LABELS = { conference: "Conference", journal: "Journal", workshop: "Workshop", preprint: "Preprint", patent: "Patent" };
-  var LINK_ORDER = ["code", "project", "data", "slides", "poster", "video"];
-  var LINK_NAMES = { code: "Code", project: "Project", data: "Data", slides: "Slides", poster: "Poster", video: "Video" };
   var state = { view: "selected", type: "all", topic: "", q: "" };
 
   function authorsHtml(list) {
@@ -185,31 +183,14 @@
     }).join(", ");
   }
 
-  // Each paper links to its Google Scholar page (PDF versions + citation formats live there).
-  function scholarUrl(p) {
-    if (p.scholar && P.scholarUser) {
-      return "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=" + P.scholarUser +
-        "&citation_for_view=" + P.scholarUser + ":" + p.scholar;
-    }
-    return "https://scholar.google.com/scholar?q=" + encodeURIComponent('"' + p.title + '"');
-  }
-
   function pubHtml(p) {
-    var links = p.links || {};
-    var gs = scholarUrl(p);
-    var btns = ['<a class="plink plink-primary" href="' + esc(gs) + '" target="_blank" rel="noopener" title="Open on Google Scholar: PDF versions and citation formats">' + icon("scholar") + "PDF &amp; Cite</a>"];
-    LINK_ORDER.filter(function (k) { return links[k]; }).forEach(function (k) {
-      btns.push('<a class="plink" href="' + esc(links[k]) + '"' + ext(links[k]) + ">" + LINK_NAMES[k] + "</a>");
-    });
-    var badges = (p.badges || []).map(function (b) { return '<span class="badge">' + esc(b) + "</span>"; });
     return '<li class="pub" id="pub-' + esc(p.id) + '">' +
       '<div class="venue-tag">' + esc(p.venueShort || p.year) + "</div>" +
       "<div>" +
-        '<div class="pub-title"><a href="' + esc(gs) + '" target="_blank" rel="noopener">' + esc(p.title) + "</a></div>" +
+        '<div class="pub-title">' + esc(p.title) + "</div>" +
         '<div class="pub-authors">' + authorsHtml(p.authors) + "</div>" +
         '<div class="pub-venue">' + esc(p.venue) + "</div>" +
         (p.tldr ? '<p class="pub-tldr">' + esc(p.tldr) + "</p>" : "") +
-        '<div class="pub-meta">' + badges.concat(btns).join("") + "</div>" +
       "</div></li>";
   }
 
@@ -265,7 +246,7 @@
       (topics.length ? '<div class="topic-row" role="group" aria-label="Topic">' + topics.map(function (t) {
         return '<button type="button" data-topic="' + esc(t) + '" aria-pressed="false">' + esc(t) + "</button>";
       }).join("") + "</div>" : "") +
-      (hasEqual ? '<p class="pub-note"><sup>*</sup> Equal contribution. Full list on <a href="' + esc((P.links || {}).scholar || "#") + '" target="_blank" rel="noopener">Google Scholar</a>.</p>' : "") +
+      (hasEqual ? '<p class="pub-note"><sup>*</sup> Equal contribution.</p>' : "") +
       '<div id="pub-list"></div>';
   }
 
@@ -286,7 +267,7 @@
     var h = "";
     if (has(S.education)) h += '<h3 class="subhead first">Education</h3>' + educationHtml();
     if (has(S.experience)) h += '<h3 class="subhead">Research Experience</h3><ul class="timeline">' + S.experience.map(function (e) {
-      return '<li><span class="when">' + esc(e.period) + '</span><div><div class="org">' + esc(e.org) + '</div><div class="role">' + esc(e.role) + "</div>" + (e.text ? "<p>" + esc(e.text) + "</p>" : "") + "</div></li>";
+      return '<li><span class="when">' + esc(e.period) + '</span><div><div class="org">' + esc(e.org) + '</div>' + (e.role ? '<div class="role">' + esc(e.role) + "</div>" : "") + (e.text ? "<p>" + esc(e.text) + "</p>" : "") + "</div></li>";
     }).join("") + "</ul>";
     return h;
   }
@@ -294,8 +275,6 @@
   function datedList(items, fn) {
     return '<ul class="dated">' + items.map(function (it) { return '<li><span class="when">' + esc(it.date || it.term || it.period || "") + "</span><span>" + fn(it) + "</span></li>"; }).join("") + "</ul>";
   }
-
-  function honorsHtml() { return has(S.honors) ? datedList(S.honors, function (it) { return it.text; }) : ""; }
 
   function talksHtml() {
     if (!has(S.talks)) return "";
@@ -313,13 +292,19 @@
     });
   }
 
+  function peopleHtml(people) {
+    if (!has(people)) return "";
+    return '<ul class="people">' + people.map(function (m) {
+      var name = m.url ? '<a href="' + esc(m.url) + '"' + ext(m.url) + ">" + esc(m.name) + "</a>" : esc(m.name);
+      return "<li><b>" + name + "</b>" + (m.note ? '<span class="people-note">, ' + esc(m.note) + "</span>" : "") +
+        (m.period ? '<span class="people-period">' + esc(m.period) + "</span>" : "") + "</li>";
+    }).join("") + "</ul>";
+  }
+
   function mentoringHtml() {
     if (!S.mentoringSummary && !has(S.mentees)) return "";
     var h = S.mentoringSummary ? "<p>" + esc(S.mentoringSummary) + "</p>" : "";
-    if (has(S.mentees)) h += datedList(S.mentees, function (m) {
-      var name = m.url ? '<a href="' + esc(m.url) + '"' + ext(m.url) + ">" + esc(m.name) + "</a>" : esc(m.name);
-      return "<b>" + name + "</b>" + (m.note ? '<span class="sub">' + esc(m.note) + "</span>" : "");
-    });
+    h += peopleHtml(S.mentees);
     return h;
   }
 
@@ -328,14 +313,6 @@
     return '<div class="kv">' + S.service.map(function (s) {
       return '<div class="kv-row"><span class="k">' + esc(s.role) + '</span><span class="v">' + esc(s.items) + "</span></div>";
     }).join("") + "</div>";
-  }
-
-  function mediaHtml() {
-    if (!has(S.media)) return "";
-    return datedList(S.media, function (m) {
-      var t = m.url ? '<a href="' + esc(m.url) + '"' + ext(m.url) + ">" + esc(m.title) + "</a>" : esc(m.title);
-      return "<b>" + esc(m.outlet) + "</b> — " + t + (m.note ? '<span class="sub">' + esc(m.note) + "</span>" : "");
-    });
   }
 
   function contactHtml() {
@@ -347,12 +324,18 @@
   }
 
   /* ---------- assemble ---------- */
-  // Honors, funding and press coverage read as one "recognition" block.
+  // Honors and press coverage share one chronological list.
   function recognitionHtml() {
-    var h = honorsHtml();
-    var m = mediaHtml();
-    if (m) h += (h ? '<h3 class="subhead">In the Media</h3>' : "") + m;
-    return h;
+    var items = (S.honors || []).slice();
+    (S.media || []).forEach(function (m) {
+      var title = m.url ? '<a href="' + esc(m.url) + '"' + ext(m.url) + ">" + esc(m.title) + "</a>" : esc(m.title);
+      items.push({
+        date: m.date,
+        text: "<b>" + esc(m.outlet) + "</b>: " + title + (m.note ? '<span class="sub">' + esc(m.note) + "</span>" : ""),
+      });
+    });
+    items.sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
+    return has(items) ? datedList(items, function (it) { return it.text; }) : "";
   }
 
   // Teaching and mentoring share a section; the nav label follows what exists.
@@ -369,9 +352,10 @@
   add("research", "Research", researchHtml());
   add("publications", "Publications", pubsHtml());
   add("projects", "Open Source", projectsHtml());
-  add("honors", "Honors & Funding", recognitionHtml(), { navLabel: "Honors" });
+  add("honors", "Honors & Media", recognitionHtml());
   add("talks", "Talks", talksHtml());
   add("teaching", tmLabel, teachingMentoringHtml(), { navLabel: has(S.teaching) ? "Teaching" : "Mentoring" });
+  add("alumni", "Alumni", peopleHtml(S.alumni));
   add("experience", "Experience", experienceHtml());
   add("service", "Service", serviceHtml());
   add("contact", "Contact", contactHtml());

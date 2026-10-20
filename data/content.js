@@ -19,19 +19,19 @@ window.SITE = {
     title: "Ph.D. Student in Computer Science",
     affiliation: "Rensselaer Polytechnic Institute",
     affiliationUrl: "https://www.rpi.edu/",
-    tagline: "Self-improving AI agents for scientific discovery",
+    tagline: "Autonomous scientific discovery",
     // Square photo. Set to "" to show initials instead.
     photo: "assets/img/profile.jpg",
     location: "Troy, NY",
     // Split on purpose so scrapers can't regex it out of the source.
     // The page draws it as an image; clicking opens the mail client.
     email: { user: "yuel2", domain: "rpi.edu" },
-    cv: "", // e.g. "files/CV.pdf" — shows a "Download CV" button when set
+    cv: "", // CV is private; do not publish it or add a download link.
     scholarUser: "EhgyJeYAAAAJ", // your Google Scholar user id
     links: {
       scholar: "https://scholar.google.com/citations?user=EhgyJeYAAAAJ&hl=en",
       github: "https://github.com/lingyue404",
-      linkedin: "https://www.linkedin.com/in/lingyue666", // TODO: confirm handle
+      linkedin: "https://www.linkedin.com/in/lingyue666",
       twitter: "",
       orcid: "",
       semanticScholar: "",
@@ -50,86 +50,91 @@ window.SITE = {
   // Job-market banner. Set enabled:false once you've accepted a position.
   jobMarket: {
     enabled: true,
-    headline: "I am on the 2026–27 academic job market.",
-    text: "Seeking tenure-track faculty and postdoctoral positions in AI agents, AI for science, and machine learning. Ph.D. expected May 2027.",
-    materials: [
-      { label: "CV", url: "" },
-      { label: "Research Statement", url: "" }, // e.g. "files/research_statement.pdf"
-      { label: "Teaching Statement", url: "" },
-      { label: "Diversity Statement", url: "" },
-      { label: "Job Talk Slides", url: "" },
-    ],
+    headline: "I am looking for postdoctoral opportunities.",
+    text: "Ph.D. expected May 2027.",
+    materials: [],
   },
 
   /* ---------------------------------------------------------------- */
   // Paragraphs support inline HTML (links, <strong>, <em>).
   about: [
-    "I am a Ph.D. student in Computer Science at <a href=\"https://www.rpi.edu/\">Rensselaer Polytechnic Institute</a>, advised by Prof. Shaowu Pan and Prof. Mark Shephard. I build <strong>AI agents for scientific problem solving</strong>, with a focus on agents that <strong>improve themselves through execution feedback</strong>.",
-    "My work automates scientific workflows end to end — from CFD simulation (<em>Foam-Agent</em>) to clinical trial outcome prediction (<em>ClinicalAgent</em>) — co-evolves agent workflows with executable skills (<em>FlowEvo</em>), and verifies claims in research papers by running their code (<em>FactReview</em>). I have published in machine learning venues (KDD, COLM, EMNLP, DMLR) and scientific journals (<em>Nature Computational Science</em>, <em>CMAME</em>).",
-    "My goal is to connect these lines of work, so that what an agent learns from one task makes it better at the next. Before my Ph.D., I was a research scientist at Tsinghua University working on graph learning for knowledge graphs and drug discovery, and earlier contributed to the open-source AutoML toolkit NNI at Microsoft Research Asia.",
+    "I am a Ph.D. student in Computer Science at <a href=\"https://www.rpi.edu/\">Rensselaer Polytechnic Institute</a>, advised by Prof. Shaowu Pan and Prof. Mark Shephard. I work on <strong>autonomous scientific discovery</strong>, building AI scientists that automate research workflows.",
+    "I develop agents for CFD simulations (<em>Foam-Agent</em>) and clinical trial outcome prediction (<em>ClinicalAgent</em>). I also study how agents can improve their workflows and reuse executable skills (<em>FlowEvo</em>). In <em>FactReview</em>, we check claims in research papers by running their code. My work has appeared at KDD, COLM, and EMNLP, and in DMLR, <em>Nature Computational Science</em>, and <em>CMAME</em>.",
+    "My goal is to let agents take on more of the scientific research process, from planning experiments to evaluating results. Before my Ph.D., I worked on knowledge graph research at Tsinghua University. Earlier, I worked on machine learning research at Microsoft Research Asia, 4Paradigm, Alibaba, and Shopee.",
   ],
 
   interests: [
-    "Self-improving agents",
-    "Multi-agent systems",
-    "Agent workflow optimization",
-    "AI for science & engineering",
-    "LLM fine-tuning & steering",
-    "Graph learning",
+    "AI Scientists",
+    "Agent Workflow Optimization",
+    "Autonomous Research",
+    "LLM Post-training",
+    "CFD",
+    "Clinical Trials",
+    "Knowledge Graphs",
   ],
 
   education: [
     {
-      period: "2024 – 2027 (expected)",
+      period: "2024 – May 2027 (expected)",
       degree: "Ph.D. in Computer Science",
       school: "Rensselaer Polytechnic Institute",
       detail: "Advisors: Prof. Shaowu Pan & Prof. Mark Shephard",
     },
-    // TODO: add M.S. / B.S. entries if desired
   ],
 
   /* ---------------------------------------------------------------- */
   // Newest first. "date" is free text. Shows `newsVisible` items, rest behind "Show more".
+  // Dates follow Ling's review and email timeline. TODO marks remaining uncertainty.
+  // BioMamba uses May within the April–May estimate. FoamGPT uses provisional September.
+  // TrialDura keeps its October placeholder because no acceptance date was found.
   newsVisible: 6,
   news: [
-    { date: "2026", text: "<strong>FlowEvo</strong> accepted to <strong>COLM 2026</strong>; received a COLM travel grant." },
-    { date: "2026", text: "<strong>Code2MCP</strong> accepted to <strong>KDD 2026</strong>." },
-    { date: "2026", text: "Our survey on <strong>workflow optimization for LLM agents</strong> accepted to <strong>Findings of EMNLP 2026</strong>." },
-    { date: "2026", text: "<strong>Foam-Agent</strong> published in <em>Computer Methods in Applied Mechanics and Engineering</em>." },
+    { date: "2026.10", text: "Received conference travel support from the <strong>RPI Department of Computer Science</strong>." }, // TODO: confirm October and whether this support was for COLM. The screenshot identifies RPI support, not a confirmed COLM grant.
+    { date: "2026.08", text: "Our survey on <strong>workflow optimization for LLM agents</strong> accepted to <strong>Findings of EMNLP 2026</strong>." },
+    { date: "2026.08", text: "<strong>Foam-Agent</strong> published online in <em>Computer Methods in Applied Mechanics and Engineering</em>." },
+    { date: "2026.07", text: "Our position paper on <strong>human-agent scientific teams</strong> accepted to the <strong>COLM Workshop on Language Models for Scientific Discovery</strong>." },
+    { date: "2026.07", text: "<strong>FlowEvo</strong> accepted to <strong>COLM 2026</strong>." },
+    { date: "2026.07", text: "<strong>Foam-Agent</strong> accepted to <em>Computer Methods in Applied Mechanics and Engineering</em>." },
+    { date: "2026.06", text: "Named an RPI <strong>Graduate Student Spotlight</strong>." },
+    { date: "2026.05", text: "<strong>Code2MCP</strong> accepted to <strong>KDD 2026</strong>." },
+    { date: "2026.05", text: "<strong>BioMamba</strong> accepted to <em>Health Data Science</em>." }, // TODO: confirm acceptance month, estimated April–May from the email timeline.
     { date: "2026.05", text: "Started a second research internship at <strong>IBM Research</strong> (T. J. Watson) on activation steering for instruction following." },
-    { date: "2026", text: "Named an RPI <strong>Graduate Student Spotlight</strong>; Foam-Agent and CFDLLMBench featured in <a href=\"#media\">RPI News</a>." },
-    { date: "2025.12", text: "Awarded <strong>$200K</strong> IBM–RPI FCRC research funding on automated design of enterprise-scale AI agent systems." },
+    { date: "2026.04", text: "Our perspective on <strong>MCP-native AI scientists</strong> accepted to <em>Frontiers in Artificial Intelligence</em>." },
+    { date: "2026.02", text: "Foam-Agent and CFDLLMBench featured in <a href=\"https://news.rpi.edu/2026/02/18/rpi-researchers-harness-agentic-ai-smarter-faster-aerospace-design\">RPI News</a>." },
+    { date: "2026.02", text: "<strong>CFDLLMBench</strong> accepted to the <em>Journal of Data-centric Machine Learning Research (DMLR)</em>." },
+    { date: "2025.09", text: "<strong>FoamGPT</strong> accepted to the <strong>NeurIPS Workshop on Machine Learning and the Physical Sciences</strong>." }, // TODO: confirm the September acceptance email refers to FoamGPT.
     { date: "2025.05", text: "Joined <strong>IBM Research</strong> as a research intern, working on multi-agent de novo protein design." },
+    { date: "2025.01", text: "Started working with <strong>Prof. Shaowu Pan</strong> and <strong>Prof. Mark Shephard</strong> as my Ph.D. advisors at RPI." },
+    { date: "2024.10", text: "<strong>TrialDura</strong> accepted to the <strong>NeurIPS Workshop on AI for New Drug Modalities</strong>." }, // TODO: confirm acceptance date, no acceptance email found in the reviewed timeline.
+    { date: "2024.09", text: "<strong>ClinicalAgent</strong> and <strong>TrialEnroll</strong> accepted to <strong>ACM BCB 2024</strong>. ClinicalAgent was selected for an oral presentation." },
+    { date: "2024.01", text: "Joined <strong>Rensselaer Polytechnic Institute</strong> as a Ph.D. student in Computer Science, advised by <strong>Prof. Tianfan Fu</strong>." },
   ],
 
   /* ---------------------------------------------------------------- */
   // Research themes. `papers` lists publication ids (see `publications` below).
   research: [
     {
-      title: "Agents that automate scientific workflows",
-      text: "Turning natural-language requests into running simulations and analyses, with retrieval, dependency-aware generation, and reviewer loops that repair failed runs.",
-      papers: ["foam-agent", "foamgpt", "cfdllmbench", "ai-cfd-scientist", "clinicalagent"],
+      title: "Autonomous Research",
+      text: "I build agents that carry out research tasks, run experiments, and check results. My goal is to connect these steps into a complete scientific research process.",
+      papers: ["ai-cfd-scientist", "factreview", "diagrambank"],
     },
     {
-      title: "Self-improvement from execution feedback",
-      text: "Co-evolving agent workflows and reusable executable skills, and optimizing workflow structure from runtime signals — without retraining the model.",
-      papers: ["flowevo", "workflow-survey", "evoflux", "tokencast"],
+      title: "Agent Workflows and Tools",
+      text: "I study how agents organize their work and use scientific software. This includes optimizing workflows, reusing executable skills, and turning code repositories into tools that agents can call.",
+      papers: ["flowevo", "workflow-survey", "evoflux", "code2mcp", "toolrosella", "tokencast"],
     },
     {
-      title: "Tools and verification for AI scientists",
-      text: "Converting code repositories into agent-callable services, and checking research claims by actually executing the released code.",
-      papers: ["code2mcp", "factreview", "toolrosella", "mcp-perspective"],
+      title: "AI for Science and Engineering",
+      text: "I apply these methods to CFD simulations, clinical trials, and biomedical research. I also develop benchmarks to evaluate scientific capabilities and use knowledge graphs to model biomedical relationships.",
+      papers: ["foam-agent", "foamgpt", "cfdllmbench", "clinicalagent", "trialenroll", "emergnn"],
     },
   ],
 
   /* ---------------------------------------------------------------- */
   // type: "conference" | "journal" | "workshop" | "preprint" | "patent"
   // selected: true → appears under "Selected".
-  // scholar: the paper's Google Scholar id — the part after "EhgyJeYAAAAJ:" in the
-  //   paper's Scholar URL (citation_for_view=...). The title and the "PDF & Cite" button
-  //   link there, so PDFs and citations stay current. If empty, a Scholar search is used.
-  // links: optional extras shown as buttons — code, project, data, slides, poster, video.
-  // badges: short highlights shown as pills.
+  // The list displays titles, authors, venues, and optional short descriptions.
+  // Scholar ids and resource metadata are retained for reference, not displayed.
   publications: [
     {
       id: "foam-agent",
@@ -156,10 +161,10 @@ window.SITE = {
       venue: "Conference on Language Modeling (COLM)",
       venueShort: "COLM 2026",
       badges: [],
-      tldr: "Compiles successful workflows into a persistent bank of callable skills, reuses them in new tasks, and suppresses skills that cause negative transfer — without any training.",
+      tldr: "Compiles successful workflows into reusable skills for new tasks and suppresses skills that cause negative transfer. No model training is required.",
       scholar: "aqlVkmm33-oC",
       links: {},
-      topics: ["Self-Improving Agents"],
+      topics: ["Agent Workflow Optimization"],
     },
     {
       id: "code2mcp",
@@ -171,7 +176,7 @@ window.SITE = {
       venue: "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), pp. 3835–3846",
       venueShort: "KDD 2026",
       badges: ["CORE A*", "135★ GitHub"],
-      tldr: "Agents analyze a repository, set up its environment, and design tool functions, with a self-correcting loop that repairs failures; applied to scientific libraries in bioinformatics, mathematics, and fluid dynamics.",
+      tldr: "Agents analyze a repository, set up its environment, and create tool functions that they test and repair. We apply this approach to scientific libraries in bioinformatics, mathematics, and fluid dynamics.",
       scholar: "3fE2CSJIrl8C",
       links: { code: "https://github.com/DEFENSE-SEU/Code2MCP" },
       topics: ["Agents", "AI for Science"],
@@ -190,7 +195,7 @@ window.SITE = {
       tldr: "Classifies methods by when the workflow structure is fixed and by what signal drives its optimization.",
       scholar: "4TOpqqG69KYC",
       links: {},
-      topics: ["Self-Improving Agents"],
+      topics: ["Agent Workflow Optimization"],
     },
     {
       id: "clinicalagent",
@@ -213,7 +218,7 @@ window.SITE = {
       type: "preprint",
       year: 2026,
       title: "FactReview: Evidence-Grounded Peer Review with Execution-Based Claim Verification",
-      authors: ["Ling Yue*", "Chaoqian Ouyang*", "Hang Xu*", "Rujun Huang", "Yuchen Liu", "Libin Zheng", "Wei Liu", "Shaowu Pan", "Shimin Di", "Min-Ling Zhang"],
+      authors: ["Ling Yue*", "Chaoqian Ouyang*", "Hang Xu*", "Ruijun Huang", "Yuchen Liu", "Libin Zheng", "Wei Liu", "Shaowu Pan", "Shimin Di", "Min-Ling Zhang"],
       venue: "arXiv preprint arXiv:2604.04074",
       venueShort: "arXiv 2026",
       badges: [],
@@ -289,6 +294,7 @@ window.SITE = {
     /* ---- Journal articles ---- */
     {
       id: "emergnn",
+      short: "EmerGNN",
       type: "journal",
       year: 2023,
       title: "Emerging Drug Interaction Prediction Enabled by a Flow-Based Graph Neural Network with Biomedical Network",
@@ -363,7 +369,7 @@ window.SITE = {
       venueShort: "arXiv 2026",
       scholar: "qUcmZB5y_30C",
       links: {},
-      topics: ["Self-Improving Agents"],
+      topics: ["Agent Workflow Optimization"],
     },
     {
       id: "ai-cfd-scientist",
@@ -482,11 +488,11 @@ window.SITE = {
       tags: ["MCP", "Tool use"],
     },
     {
-      name: "NNI (contributor)",
-      description: "Microsoft's open-source AutoML toolkit. Implemented core hyperparameter-optimization and NAS algorithms.",
-      url: "https://github.com/microsoft/nni",
-      stars: "14k+",
-      tags: ["AutoML", "NAS"],
+      name: "FactReview",
+      description: "Checks research claims against related work and runs released code to verify empirical results.",
+      url: "https://github.com/DEFENSE-SEU/FactReview",
+      stars: "74",
+      tags: ["Peer review", "Claim verification"],
     },
   ],
 
@@ -507,8 +513,8 @@ window.SITE = {
     {
       period: "2022.07 – 2023.12",
       org: "Tsinghua University",
-      role: "Research Scientist",
-      text: "Relation-aware ensemble for knowledge graph embedding, ranked first on OGB leaderboards (EMNLP); flow-based GNN for drug interaction prediction (Nature Computational Science).",
+      role: "",
+      text: "Developed a relation-aware ensemble for knowledge graph embedding that ranked first on OGB leaderboards (EMNLP). Worked on a flow-based GNN for drug interaction prediction (Nature Computational Science).",
     },
     {
       period: "2018.03 – 2018.11",
@@ -520,9 +526,8 @@ window.SITE = {
 
   /* ---------------------------------------------------------------- */
   honors: [
-    { date: "2025.12", text: "<strong>Research Funding</strong> — “Automated Design and Optimization of Enterprise-Scale AI Agent Systems,” IBM–RPI Future of Computing Research Collaboration (FCRC), $200,000 total budget. Proposed the direction and drafted the proposal." },
-    { date: "2026", text: "Travel Grant, Conference on Language Modeling (COLM 2026)" },
-    { date: "2026", text: "Graduate Student Spotlight, Rensselaer Polytechnic Institute" },
+    { date: "2026.10", text: "Conference travel support, RPI Department of Computer Science" }, // TODO: confirm month alongside the corresponding News entry.
+    { date: "2026.06", text: "Graduate Student Spotlight, Rensselaer Polytechnic Institute" },
     { date: "2024", text: "Oral presentation, ACM BCB 2024 (ClinicalAgent)" },
   ],
 
@@ -537,10 +542,22 @@ window.SITE = {
   teaching: [],
 
   /* ---------------------------------------------------------------- */
-  mentoringSummary: "Mentored 8 undergraduate researchers; one has since joined our group as a Ph.D. student.",
+  mentoringSummary: "",
   // Optional individual entries. Example:
   // { name: "Jane Doe", period: "2025–2026", note: "RPI undergrad → Ph.D. at RPI", url: "" },
-  mentees: [],
+  mentees: [
+    { name: "Chaoqian Ouyang", note: "Sun Yat-sen University" },
+    { name: "Zeyu Ren", note: "Southeast University" },
+    { name: "Ruijun Huang", note: "Southeast University" },
+    { name: "Hang Xu", note: "Southeast University" },
+    { name: "Jiaying Wang", note: "Rensselaer Polytechnic Institute" },
+  ],
+
+  alumni: [
+    { name: "Sixue Xing", note: "Ph.D. at University of Notre Dame" },
+    { name: "Peijing Xu", note: "Master’s at Carnegie Mellon University" },
+    { name: "Tingwen Zhang", note: "Ph.D. at Rensselaer Polytechnic Institute" },
+  ],
 
   /* ---------------------------------------------------------------- */
   service: [
@@ -552,17 +569,17 @@ window.SITE = {
   /* ---------------------------------------------------------------- */
   media: [
     {
-      date: "2026",
+      date: "2026.02",
       outlet: "RPI News",
       title: "RPI Researchers Harness Agentic AI for Smarter, Faster Aerospace Design",
       note: "Featuring Foam-Agent and CFDLLMBench. Syndicated by SAE's Mobility Engineering & Technology.",
-      url: "", // TODO: paste article URL
+      url: "https://news.rpi.edu/2026/02/18/rpi-researchers-harness-agentic-ai-smarter-faster-aerospace-design",
     },
   ],
 
   /* ---------------------------------------------------------------- */
   contact: {
-    text: "I am happy to talk about research collaborations, faculty and postdoc opportunities, or speaking invitations. Email is the best way to reach me.",
+    text: "I am happy to talk about research collaborations, postdoctoral opportunities, or speaking invitations. Email is the best way to reach me.",
     address: "Department of Computer Science, Rensselaer Polytechnic Institute, 110 8th Street, Troy, NY 12180",
   },
 

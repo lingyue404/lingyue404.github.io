@@ -283,19 +283,6 @@ p { margin: 0 0 1em; }
 .pub-authors .me { color: var(--text); font-weight: 600; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
 .pub-venue { font-size: .88rem; font-style: italic; color: var(--muted); }
 .pub-tldr { font-size: .9rem; color: var(--text); margin: 6px 0 0; opacity: .88; }
-.pub-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; align-items: center; }
-.badge { font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 5px; background: var(--badge-bg); color: var(--badge-ink); }
-.plink {
-  font-size: .76rem; font-weight: 500; padding: 2px 9px; border-radius: 5px;
-  border: 1px solid var(--line); color: var(--muted); background: var(--surface); cursor: pointer; font-family: var(--sans);
-}
-.plink:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
-.plink { display: inline-flex; align-items: center; gap: 4px; }
-.plink svg { width: 13px; height: 13px; fill: currentColor; }
-.plink-primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-.plink-primary:hover { color: var(--bg); filter: brightness(1.1); }
-.pub-title a { color: inherit; }
-.pub-title a:hover { color: var(--accent); }
 .empty { color: var(--faint); font-style: italic; padding: 16px 0; }
 
 /* Projects */
@@ -325,6 +312,12 @@ p { margin: 0 0 1em; }
 .dated li { display: grid; grid-template-columns: 76px 1fr; gap: 16px; padding: 7px 0; }
 .dated .when { font-family: var(--mono); font-size: .8rem; color: var(--faint); padding-top: 3px; }
 .dated .sub { display: block; color: var(--muted); font-size: .9rem; }
+
+/* Mentoring and alumni */
+.people { list-style: none; margin: 0; padding: 0; }
+.people li { padding: 7px 0; }
+.people-note { color: var(--muted); }
+.people-period { display: block; font-family: var(--mono); font-size: .8rem; color: var(--faint); }
 
 .kv { display: grid; gap: 10px; }
 .kv-row { display: grid; grid-template-columns: 200px 1fr; gap: 16px; font-size: .95rem; }
