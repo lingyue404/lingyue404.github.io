@@ -132,7 +132,7 @@
 
   function educationHtml() {
     if (!has(S.education)) return "";
-    return '<ul class="timeline">' + S.education.map(function (e) {
+    return '<ul class="timeline education">' + S.education.map(function (e) {
       return '<li><span class="when">' + esc(e.period) + '</span><div><div class="org">' + esc(e.school) + '</div><div class="role">' + esc(e.degree) + "</div>" + (e.detail ? "<p>" + esc(e.detail) + "</p>" : "") + "</div></li>";
     }).join("") + "</ul>";
   }
@@ -171,8 +171,7 @@
   }
 
   /* ---------- publications ---------- */
-  var TYPE_LABELS = { conference: "Conference", journal: "Journal", workshop: "Workshop", preprint: "Preprint", patent: "Patent" };
-  var state = { view: "selected", type: "all", topic: "", q: "" };
+  var searchQuery = "";
 
   function authorsHtml(list) {
     var me = (P.highlightName || P.name || "").toLowerCase();
@@ -190,16 +189,14 @@
         '<div class="pub-title">' + esc(p.title) + "</div>" +
         '<div class="pub-authors">' + authorsHtml(p.authors) + "</div>" +
         '<div class="pub-venue">' + esc(p.venue) + "</div>" +
+        (p.note ? '<p class="pub-detail">' + esc(p.note) + "</p>" : "") +
         (p.tldr ? '<p class="pub-tldr">' + esc(p.tldr) + "</p>" : "") +
       "</div></li>";
   }
 
   function filteredPubs() {
-    var q = state.q.trim().toLowerCase();
+    var q = searchQuery.trim().toLowerCase();
     return (S.publications || []).filter(function (p) {
-      if (state.view === "selected" && !p.selected) return false;
-      if (state.view === "all" && state.type !== "all" && p.type !== state.type) return false;
-      if (state.topic && (p.topics || []).indexOf(state.topic) < 0) return false;
       if (q) {
         var hay = [p.title, p.venue, p.venueShort, (p.authors || []).join(" "), p.tldr, (p.topics || []).join(" ")].join(" ").toLowerCase();
         if (hay.indexOf(q) < 0) return false;
@@ -213,39 +210,14 @@
     if (!box) return;
     var list = filteredPubs();
     if (!list.length) { box.innerHTML = '<p class="empty">No publications match.</p>'; return; }
-    if (state.view === "selected") { box.innerHTML = '<ol class="pubs">' + list.map(pubHtml).join("") + "</ol>"; return; }
-    var years = {};
-    list.forEach(function (p) { (years[p.year] = years[p.year] || []).push(p); });
-    box.innerHTML = Object.keys(years).sort(function (a, b) { return b - a; }).map(function (y) {
-      return '<div class="pub-group-title">' + esc(y) + '</div><ol class="pubs">' + years[y].map(pubHtml).join("") + "</ol>";
-    }).join("");
+    box.innerHTML = '<ol class="pubs">' + list.map(pubHtml).join("") + "</ol>";
   }
 
   function pubsHtml() {
     var pubs = S.publications || [];
     if (!pubs.length) return "";
-    var counts = { all: pubs.length };
-    pubs.forEach(function (p) { counts[p.type] = (counts[p.type] || 0) + 1; });
-    var nSel = pubs.filter(function (p) { return p.selected; }).length;
-    var topics = [];
-    pubs.forEach(function (p) { (p.topics || []).forEach(function (t) { if (topics.indexOf(t) < 0) topics.push(t); }); });
-
-    var typeBtns = ["all"].concat(Object.keys(TYPE_LABELS).filter(function (t) { return counts[t]; }));
     var hasEqual = pubs.some(function (p) { return (p.authors || []).some(function (a) { return /\*$/.test(a); }); });
-
-    return '<div class="pub-tools">' +
-        '<div class="seg" role="group" aria-label="View">' +
-          '<button type="button" data-view="selected" aria-pressed="true">Selected<span class="count">' + nSel + "</span></button>" +
-          '<button type="button" data-view="all" aria-pressed="false">All<span class="count">' + pubs.length + "</span></button>" +
-        "</div>" +
-        '<div class="seg" role="group" aria-label="Type" id="type-seg" hidden>' + typeBtns.map(function (t) {
-          return '<button type="button" data-type="' + t + '" aria-pressed="' + (t === "all") + '">' + (t === "all" ? "Any type" : TYPE_LABELS[t]) + '<span class="count">' + counts[t] + "</span></button>";
-        }).join("") + "</div>" +
-        '<input class="pub-search" id="pub-search" type="search" placeholder="Search title, author, venue…" aria-label="Search publications">' +
-      "</div>" +
-      (topics.length ? '<div class="topic-row" role="group" aria-label="Topic">' + topics.map(function (t) {
-        return '<button type="button" data-topic="' + esc(t) + '" aria-pressed="false">' + esc(t) + "</button>";
-      }).join("") + "</div>" : "") +
+    return '<div class="pub-tools"><input class="pub-search" id="pub-search" type="search" placeholder="Search title, author, venue…" aria-label="Search publications"></div>' +
       (hasEqual ? '<p class="pub-note"><sup>*</sup> Equal contribution.</p>' : "") +
       '<div id="pub-list"></div>';
   }
@@ -315,14 +287,6 @@
     }).join("") + "</div>";
   }
 
-  function contactHtml() {
-    var c = S.contact || {};
-    if (!c.text && !P.email) return "";
-    return '<div class="contact-box">' + (c.text ? "<p>" + esc(c.text) + "</p>" : "") +
-      (P.email ? emailLink("email") : "") +
-      (c.address ? "<address>" + esc(c.address) + "</address>" : "") + "</div>";
-  }
-
   /* ---------- assemble ---------- */
   // Honors and press coverage share one chronological list.
   function recognitionHtml() {
@@ -348,17 +312,16 @@
 
   // Section order (highest priority for a hiring committee first).
   add("about", "About", aboutHtml());
-  add("news", "News", newsHtml());
+  add("news", "News", newsHtml(), { nav: false });
   add("research", "Research", researchHtml());
   add("publications", "Publications", pubsHtml());
-  add("projects", "Open Source", projectsHtml());
-  add("honors", "Honors & Media", recognitionHtml());
-  add("talks", "Talks", talksHtml());
-  add("teaching", tmLabel, teachingMentoringHtml(), { navLabel: has(S.teaching) ? "Teaching" : "Mentoring" });
-  add("alumni", "Alumni", peopleHtml(S.alumni));
-  add("experience", "Experience", experienceHtml());
-  add("service", "Service", serviceHtml());
-  add("contact", "Contact", contactHtml());
+  add("experience", "Education & Experience", experienceHtml(), { navLabel: "Experience" });
+  add("projects", "Open Source", projectsHtml(), { nav: false });
+  add("honors", "Honors & Media", recognitionHtml(), { nav: false });
+  add("talks", "Talks", talksHtml(), { nav: false });
+  add("teaching", tmLabel, teachingMentoringHtml(), { nav: false });
+  add("alumni", "Former Research Mentees", peopleHtml(S.alumni), { nav: false });
+  add("service", "Service", serviceHtml(), { nav: false });
 
   renderSidebar();
   main.innerHTML = sections.map(function (s) {
@@ -377,10 +340,6 @@
   renderPubList();
 
   /* ---------- interactions ---------- */
-  function setPressed(selector, attr, value) {
-    document.querySelectorAll(selector).forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute(attr) === value)); });
-  }
-
   document.addEventListener("click", function (e) {
     var t = e.target.closest("button, a");
     if (!t) return;
@@ -390,20 +349,7 @@
       location.href = "mailto:" + emailAddr();
       return;
     }
-    if (t.dataset.view) {
-      state.view = t.dataset.view;
-      setPressed("[data-view]", "data-view", state.view);
-      document.getElementById("type-seg").hidden = state.view !== "all";
-      renderPubList();
-    } else if (t.dataset.type) {
-      state.type = t.dataset.type;
-      setPressed("[data-type]", "data-type", state.type);
-      renderPubList();
-    } else if (t.dataset.topic) {
-      state.topic = state.topic === t.dataset.topic ? "" : t.dataset.topic;
-      setPressed("[data-topic]", "data-topic", state.topic);
-      renderPubList();
-    } else if (t.dataset.more === "news") {
+    if (t.dataset.more === "news") {
       document.querySelectorAll(".news li.is-hidden").forEach(function (li) { li.classList.remove("is-hidden"); });
       t.remove();
     } else if (t.dataset.gotoPub) {
@@ -415,12 +361,8 @@
   function goToPub(id) {
     var target = document.getElementById("pub-" + id);
     if (!target) {
-      // Not visible under current filters: switch to "All" and clear filters.
-      state = { view: "all", type: "all", topic: "", q: "" };
-      setPressed("[data-view]", "data-view", "all");
-      setPressed("[data-type]", "data-type", "all");
-      setPressed("[data-topic]", "data-topic", "");
-      document.getElementById("type-seg").hidden = false;
+      // A research-theme link can reveal a paper hidden by the search query.
+      searchQuery = "";
       document.getElementById("pub-search").value = "";
       renderPubList();
       target = document.getElementById("pub-" + id);
@@ -431,7 +373,7 @@
   }
 
   var search = document.getElementById("pub-search");
-  if (search) search.addEventListener("input", function () { state.q = search.value; renderPubList(); });
+  if (search) search.addEventListener("input", function () { searchQuery = search.value; renderPubList(); });
 
   // Theme toggle
   document.getElementById("theme-toggle").addEventListener("click", function () {
